@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+<style>
+
+h1 {
+	margin:0;
+
+}
+
+h2 {
+	margin:0;
+
+}
+.syr_admin3-boundary {
+  fill: none;
+  stroke: #FFF;
+  stroke-linejoin: round;
+}
+  
+.syr_admin3 { 
+  fill: #CDCDCD; 
+}
+
+.syr_admin3:hover { 
+  fill: #CD435B; 
+}
+
+
+.gov-label {
+  pointer-events: none;
+  fill: #525252;
+  font-size: 10px;
+  font-weight: 300;
+  text-anchor: middle;
+  text-shadow: 0.5px 0.5px 0.5px #fff;
+}
+
+.gov_bounds {
+	fill:none;
+	stroke:#525252; 
+}
+
+text {
+  font-family:sans-serif;
+  font-size: 10px;
+  pointer-events: none;
+}
+
+#header {
+	width:100%;
+	height:75px;
+}
+
+#area1 {
+	width:650px;
+	height: 500px;
+	float:left;
+	margin-left:0;
+	margin-right:0;
+}
+
+#area2 {
+	width:600px;
+	height: 300px;
+	float:left;
+	margin-left:0;
+	margin-right:0;
+}
+
+#area3 {
+	width:600px;
+	height: 200px;
+	float:left;
+	margin-left:0;
+	margin-right:0;
+}
+
+#footer {
+	width:100%;
+	height: 30px;
+	clear:both;
+	float:bottom;
+	margin-bottom: 0
+}
+
+table {
+	margin:auto;
+	font-size:25px;
+}
+
+td:first-child + td + td {
+	text-align:right;
+}
+
+td:first-child{
+	font-weight:bold;
+}
+
+
+</style>
+
+
+</head>
+
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<div id="header">
+	<h1>Syrian Arab Republic Reference Map</h1>
+	<h2>Sub-district Identifier </h2>
+</div>
+<div id="area1"></div>
+<div id="area2"></div>
+<div id="area3"></div>
+<div id="footer"><p>Data: Modified from <a href="http://www.humanitarianresponse.info/en/applications/data/datasets/locations/syrian-arab-republic">Common Operational Dataset(COD)<a> </p></div>
+<script>
+
+var width = 650;
+    height = 500,
+	height2 = 300,
+	active = d3.select(null);
+
+var projection = d3.geo.mercator()
+    .center([39,35])
+    .scale(4400)
+    .translate([width / 2, height / 2.1]);
+
+var path = d3.geo.path()
+    .projection(projection);
+
+var zoom = d3.behavior.zoom()
+	.scaleExtent([1,3])
+	.on("zoom", zoomed);
+
+var map1 = d3.select("#area1").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+	.call(zoom)
+	.append("g");
+	
+d3.json("syria_adm.json", function(error, Syria) {
+	var subdists = topojson.feature(Syria, Syria.objects.syr_admin3),
+		govs = topojson.feature(Syria, Syria.objects.syr_admin1_gov);
+	map1.selectAll(".syr_admin3")
+      .data(subdists.features)
+    .enter().append("path")
+      .attr("class", function(d) { return ( "syr_admin3 "); })
+	  .attr("id", function(d) { return (d.properties.PCODE);})
+      .attr("d", path)
+	  .on("mouseover",hover)
+	  .on("mouseout", reset);
+	  
+	  
+	map1.append("path")
+	  .datum(topojson.mesh(Syria, Syria.objects.syr_admin3, function(a, b) { return a !== b  ; }))
+	  .attr("d", path)
+	  .attr("class", "syr_admin3-boundary");
+	  
+	map1.append("path")
+	  .datum(topojson.mesh(Syria, Syria.objects.syr_admin1_gov, function(a, b) { return a !== b  ; }))
+	  .attr("d", path)
+	  .attr("class", "gov_bounds");
+	  
+	map1.selectAll("text")
+	  .data((topojson.feature(Syria, Syria.objects.syr_admin1_gov).features))
+	  .enter()
+	  .append("text")
+	  .text(function(d) {return d.properties.ADMIN1_EN})
+	  .attr("x", function(d){
+	    	return path.centroid(d)[0];
+	  })
+	  .attr("y", function(d){
+	    	return  path.centroid(d)[1];
+	  })
+	 .attr("class","gov-label");
+	    
+	  
+});
+	
+var map2 = d3.select("#area2").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+	
+var g2 = map2.append("g");
+	
+d3.json("syria_adm.json", function(error, Syria) {
+	var subdists = topojson.feature(Syria, Syria.objects.syr_admin3),
+		comms = topojson.feature(Syria, Syria.objects.syr_admin4_cap);
+
+	g2.selectAll(".syr_admin3_2")
+      .data(subdists.features)
+    .enter().append("path")
+      .attr("class", function(d) { return ( "syr_admin3_2 "); })
+	  .attr("id", function(d) { return (d.properties.PCODE + "_2");})
+	  .style("opacity",0)
+      .attr("d", path);	
+	  
+	  
+	g2.selectAll("comms")
+      .data(comms.features)
+	  .enter().append("path")
+      .attr("class", "comms")
+	  .attr("id", function(d) {return (d.properties.ADMIN3_COD + "_comm");})
+	  .style("opacity",0);
+	  
+	g2.selectAll("comm-labels")
+      .data(comms.features)
+	  .enter().append("text")
+      .attr("class", "comm-labels")
+	  .attr("id", function(d) {return (d.properties.ADMIN3_COD + "_comm");})
+	  .text(function (d) {return (d.properties.NAME_EN);})
+	  .style("opacity",0)
+      .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; });
+      
+
+});
+
+var table = d3.select("#area3");
+
+function zoomed() {
+	map1.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+	map1.select(".syr_admin3-boundary").style("stroke-width",1 /d3.event.scale + "px");
+}
+
+function hover(d) {
+	var bounds = path.bounds(d),
+		dx = bounds[1][0] - bounds[0][0],
+		dy = bounds[1][1] - bounds[0][1],
+		x = (bounds[0][0] + bounds[1][0]) / 2,
+		y = (bounds[0][1] + bounds[1][1]) / 2,
+		scale = .9 / Math.max(dx / width, dy / height2),
+		translate = [width / 2 - scale * x, height2 / 2 - scale * y];
+	
+
+	d3.select("#" + this.id + "_2") 
+		.style("fill","#e6e6e7")	
+		.style("opacity",1);
+		
+	d3.selectAll("#" + this.id + "_comm")
+		.style("opacity",1)
+		.attr("d", path.pointRadius(2/scale));
+		
+	d3.selectAll("text#" + this.id + "_comm")
+	  .style("opacity",1)
+	  .style("font-size", 12/scale + "px")
+	  .attr("dx", 2/scale + "em")
+	  .attr("dy", 2/scale + "em");
+	
+	
+	if (active.node() === this) return reset();
+	active.classed("active", false);
+	active = d3.select(this).classed("active", true);
+
+
+	
+	g2.transition()
+      .duration(0)
+      .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
+	  
+	table.html("<table><th colspan='3'>" + d.properties.PCODE + "</th><tr><td>Sub-district</td><td>" + d.properties.NAME_EN + "</td><td>" + d.properties.NAME_ARA + "</td></tr><tr><td>District</td><td>" +  d.properties.ADMIN2_EN + "</td><td>" + d.properties.ADMIN2_ARA + "</td></tr><tr><td>Governorate</td><td>" + d.properties.ADMIN1_EN  + "</td><td>" +  d.properties.ADMIN1_ARA + "</td></tr></table>");
+	
+	
+	//"<p>" + d.properties.NAME_EN + "   " +  d.properties.NAME_ARA + "</p> <p> " + d.properties.PCODE + "</p> <p>" + d.properties.ADMIN2_EN + "   " + d.properties.ADMIN2_ARA + "</p> <p>" + d.properties.ADMIN1_EN + "   " + d.properties.ADMIN1_ARA + "</p>" );	
+}
+
+function reset() {
+	d3.select("#" + this.id + "_2") 
+	  .style("opacity",0);
+	
+	d3.selectAll("#" + this.id + "_comm")
+	  .style("opacity",0)
+	  .attr("d",path.pointRadius(0));
+	  
+	d3.selectAll("text#" + this.id + "_comm")
+	  .style("opacity",0)
+	
+	active.classed("active", false);
+	active = d3.select(null);
+
+	g2.transition()
+      .duration(0)
+      .attr("transform", "");
+	  
+	table.html("");
+}
+
+console.log(screen.width);
+
+</script>
+
+</body>
