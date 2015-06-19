@@ -98,6 +98,17 @@ td:first-child{
 }
 
 
+.selected {
+	fill:red;
+	transition.5s;
+}
+
+
+.selected:hover {
+	fill:green;
+}
+
+
 </style>
 
 
@@ -106,6 +117,7 @@ td:first-child{
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://d3js.org/topojson.v1.min.js"></script>
+<script src="PapaParse-4.1.0/papaparse.min.js" type="text/javascript"></script>
 <div id="header">
 	<h1>Syrian Arab Republic Reference Map</h1>
 	<h2>Sub-district Identifier </h2>
@@ -113,6 +125,7 @@ td:first-child{
 <div id="area1"></div>
 <div id="area2"></div>
 <div id="area3"></div>
+<a id="download">DOWNLOAD</a>
 <div id="footer"><p>Data: Modified from <a href="http://www.humanitarianresponse.info/en/applications/data/datasets/locations/syrian-arab-republic">Common Operational Dataset(COD)<a> </p></div>
 <script>
 
@@ -149,7 +162,8 @@ d3.json("syria_adm.json", function(error, Syria) {
 	  .attr("id", function(d) { return (d.properties.PCODE);})
       .attr("d", path)
 	  .on("mouseover",hover)
-	  .on("mouseout", reset);
+	  .on("mouseout", reset)
+	  .on("click",clicked);
 	  
 	  
 	map1.append("path")
@@ -284,6 +298,29 @@ function reset() {
 	  
 	table.html("");
 }
+
+var pcodeList = {};
+pcodeList.objects = [];
+
+function clicked(d) {
+	if (this.className.baseVal === "syr_admin3 active"){
+		console.log(this.className.baseVal);
+		var selection = d3.select("#" + d.properties.PCODE)
+		.attr("class","selected");
+		pcodeList.objects.push({"pcode": d.properties.PCODE, "name": d.properties.NAME_EN});
+	}else {	
+		var index = pcodeList.objects.map(function(e) { return e.pcode; }).indexOf(d.properties.PCODE);
+		pcodeList.objects.splice( index, 1 );				
+		d3.select("#" + d.properties.PCODE)
+		.attr("class","syr_admin3 ");
+	}
+	var csv = Papa.unparse(pcodeList.objects);
+	d3.select("#download")
+	.attr("download","DOWNLOAD!!!.csv")
+	.attr("href",'data:text/csv;charset=utf-8,'+escape(csv));
+};
+
+
 
 
 </script>
