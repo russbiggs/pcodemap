@@ -1,119 +1,117 @@
 <!DOCTYPE html>
+<html>
 <meta charset="utf-8">
 <head>
-<style>
+	<style>
 
-h1 {
-	margin:0;
+	h1 {
+		margin:0;
 
-}
+	}
 
-h2 {
-	margin:0;
+	h2 {
+		margin:0;
 
-}
-.syr_admin3-boundary {
-  fill: none;
-  stroke: #FFF;
-  stroke-linejoin: round;
-}
-  
-.syr_admin3 { 
-  fill: #CDCDCD; 
-}
+	}
+	.syr_admin3-boundary {
+	  fill: none;
+	  stroke: #FFF;
+	  stroke-linejoin: round;
+	}
+	  
+	.syr_admin3 { 
+	  fill: #CDCDCD; 
+	}
 
-.syr_admin3:hover { 
-  fill: #CD435B; 
-}
-
-
-.gov-label {
-  pointer-events: none;
-  fill: #525252;
-  font-size: 10px;
-  font-weight: 300;
-  text-anchor: middle;
-  text-shadow: 0.5px 0.5px 0.5px #fff;
-}
-
-.gov_bounds {
-	fill:none;
-	stroke:#525252; 
-}
-
-text {
-  font-family:sans-serif;
-  font-size: 10px;
-  pointer-events: none;
-}
-
-#header {
-	width:100%;
-	height:75px;
-}
-
-#area1 {
-	width:650px;
-	height: 500px;
-	float:left;
-	margin-left:0;
-	margin-right:0;
-}
-
-#area2 {
-	width:600px;
-	height: 300px;
-	float:left;
-	margin-left:0;
-	margin-right:0;
-}
-
-#area3 {
-	width:600px;
-	height: 200px;
-	float:left;
-	margin-left:0;
-	margin-right:0;
-}
-
-#footer {
-	width:100%;
-	height: 30px;
-	clear:both;
-	float:bottom;
-	margin-bottom: 0
-}
-
-table {
-	margin:auto;
-	font-size:25px;
-}
-
-td:first-child + td + td {
-	text-align:right;
-}
-
-td:first-child{
-	font-weight:bold;
-}
+	.syr_admin3:hover { 
+	  fill: #CD435B; 
+	}
 
 
-.selected {
-	fill:red;
-	transition.5s;
-}
+	.gov-label {
+	  pointer-events: none;
+	  fill: #525252;
+	  font-size: 10px;
+	  font-weight: 300;
+	  text-anchor: middle;
+	  text-shadow: 0.5px 0.5px 0.5px #fff;
+	}
+
+	.gov_bounds {
+		fill:none;
+		stroke:#525252; 
+	}
+
+	text {
+	  font-family:sans-serif;
+	  font-size: 10px;
+	  pointer-events: none;
+	}
+
+	#header {
+		width:100%;
+		height:75px;
+	}
+
+	#area1 {
+		width:650px;
+		height: 500px;
+		float:left;
+		margin-left:0;
+		margin-right:0;
+	}
+
+	#area2 {
+		width:600px;
+		height: 300px;
+		float:left;
+		margin-left:0;
+		margin-right:0;
+	}
+
+	#area3 {
+		width:600px;
+		height: 200px;
+		float:left;
+		margin-left:0;
+		margin-right:0;
+	}
+
+	#footer {
+		width:100%;
+		height: 30px;
+		clear:both;
+		float:bottom;
+		margin-bottom: 0
+	}
+
+	table {
+		margin:auto;
+		font-size:25px;
+	}
+
+	td:first-child + td + td {
+		text-align:right;
+	}
+
+	td:first-child{
+		font-weight:bold;
+	}
 
 
-.selected:hover {
-	fill:green;
-}
+	.selected {
+		fill:red;
+		transition.5s;
+	}
 
 
-</style>
+	.selected:hover {
+		fill:green;
+	}
 
 
+	</style>
 </head>
-
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://d3js.org/topojson.v1.min.js"></script>
@@ -123,9 +121,11 @@ td:first-child{
 	<h2>Sub-district Identifier </h2>
 </div>
 <div id="area1"></div>
+
 <div id="area2"></div>
 <div id="area3"></div>
 <a id="download">DOWNLOAD</a>
+
 <div id="footer"><p>Data: Modified from <a href="http://www.humanitarianresponse.info/en/applications/data/datasets/locations/syrian-arab-republic">Common Operational Dataset(COD)<a> </p></div>
 <script>
 
@@ -163,8 +163,7 @@ d3.json("syria_adm.json", function(error, Syria) {
       .attr("d", path)
 	  .on("mouseover",hover)
 	  .on("mouseout", reset)
-	  .on("click",clicked);
-	  
+	  .on("click",clicked); 
 	  
 	map1.append("path")
 	  .datum(topojson.mesh(Syria, Syria.objects.syr_admin3, function(a, b) { return a !== b  ; }))
@@ -187,9 +186,7 @@ d3.json("syria_adm.json", function(error, Syria) {
 	  .attr("y", function(d){
 	    	return  path.centroid(d)[1];
 	  })
-	 .attr("class","gov-label");
-	    
-	  
+	 .attr("class","gov-label");	  
 });
 	
 var map2 = d3.select("#area2").append("svg")
@@ -307,22 +304,32 @@ function clicked(d) {
 		console.log(this.className.baseVal);
 		var selection = d3.select("#" + d.properties.PCODE)
 		.attr("class","selected");
-		pcodeList.objects.push({"pcode": d.properties.PCODE, "name": d.properties.NAME_EN});
+		pcodeList.objects.push(
+			{"pcode": d.properties.PCODE, 
+			 "name_en": d.properties.NAME_EN,
+			 "name_ar": d.properties.NAME_ARA,
+			 "dist_en":d.properties.ADMIN2_EN,
+			 "dist_ar":d.properties.ADMIN2_ARA,
+			 "gov_en":d.properties.ADMIN1_EN,
+			 "gov_ar":d.properties.ADMIN1_ARA}
+			);
 	}else {	
 		var index = pcodeList.objects.map(function(e) { return e.pcode; }).indexOf(d.properties.PCODE);
 		pcodeList.objects.splice( index, 1 );				
 		d3.select("#" + d.properties.PCODE)
-		.attr("class","syr_admin3 ");
+		  .attr("class","syr_admin3 ");
 	}
-	var csv = Papa.unparse(pcodeList.objects);
+	var csv = Papa.unparse(pcodeList.objects),
+		BOM = "\uFEFF",
+		csvBom = BOM + csv,
+		date = new Date(),
+		time = '_' +('0' +date.getHours()).slice(-2) + ('0' +date.getMinutes()).slice(-2);
+		fileName = "pcodelist" + time + ".csv";
 	d3.select("#download")
-	.attr("download","DOWNLOAD!!!.csv")
-	.attr("href",'data:text/csv;charset=utf-8,'+escape(csv));
+	  .attr("download",fileName)
+	  .attr("href",'data:text/csv;charset=utf-8,'+encodeURIComponent(csvBom));
 };
-
-
-
-
 </script>
 
 </body>
+</html>
