@@ -70,11 +70,15 @@
 
 	#area1 {
 		<!--background-color:red;-->
-		width:50%;
-		height: 100%;
+		width:49%;
+		height: 99%;
 		float:left;
 		margin-left:0;
 		margin-right:0;
+		border-width:0.5%;
+		border-color:black;
+		border-style:solid;
+		
 	}
 
 	#area2 {
@@ -115,12 +119,10 @@
 		font-weight:bold;
 	}
 
-
 	.selected {
 		fill:red;
 		transition.5s;
 	}
-
 
 	.selected:hover {
 		fill:green;
@@ -137,35 +139,53 @@
 		border-style:solid;
 	}
 	
-	
 	#button {
-		
+		background-color:grey;
 		text-align:center;
-		height:5%;
-		width:100%;
-		background: -moz-linear-gradient(top, #cedce7 0%, #596a72 100%); /* FF3.6+ */
-		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#cedce7), color-stop(100%,#596a72)); /* Chrome,Safari4+ */
-		background: -webkit-linear-gradient(top, #cedce7 0%,#596a72 100%); /* Chrome10+,Safari5.1+ */
-		background: -o-linear-gradient(top, #cedce7 0%,#596a72 100%); /* Opera 11.10+ */
-		background: -ms-linear-gradient(top, #cedce7 0%,#596a72 100%); /* IE10+ */
-		background: linear-gradient(to bottom, #cedce7 0%,#596a72 100%); /* W3C */
+		height:4%;
+		width:50%;
 		float:left;
 		margin-left:0;
 		margin-right:0;
 		line-height:28px;
 		border-radius:5px;
-		clear:both;
+		clear:left;
+		paddingTop:0.5%;
+		paddingBottom:0.5%;
+		
+	}
+	.button {
+		background-color:grey;
+		text-align:center;
+		height:4%;
+		width:100%;
+	
+	}
+	#selectButton {
+		background-color:grey;
+		text-align:center;
+		height:4%;
+		width:50%;
+		float:left;
+		margin-left:0;
+		margin-right:0;
+		line-height:28px;
+		border-radius:5px;
+		clear:left;
+		
 	}
 	
 	span {
 		vertical-align: middle;
-		font-size:1.1em;
+		font-size:1.2em;
 		color:white;
+		pointer-events:none;
 	
 	}
 	
-	#download {
+	#download, #selector {
 		display: inline-block;
+		width:50%;
 	}
 
 	</style>
@@ -188,7 +208,12 @@
 <div id="area3"></div>
 <a id="download">
 <div id="button">
-<span>Download .csv of selected features</span>
+<span>Download .csv</span>
+</div>
+</a>
+<a id="selector">
+<div id="selectButton">
+<span id="selectorSpan">Select all</span>
 </div>
 </a>
 </div>
@@ -196,9 +221,6 @@
 </div>
 
 <script>
-
-
-
 var width = 625;
     height = 500,
 	height2 = 300,
@@ -221,6 +243,9 @@ var map1 = d3.select("#area1").append("svg")
     .attr("height", height)
 	.call(zoom)
 	.append("g");
+	
+d3.select("#selectButton")
+	.on('click',selectDeselect);
 	
 d3.json("syria_adm.json", function(error, Syria) {
 	var subdists = topojson.feature(Syria, Syria.objects.syr_admin3),
@@ -298,7 +323,6 @@ d3.json("syria_adm.json", function(error, Syria) {
 
 });
 
-
 var table = d3.select("#area3");
 
 function zoomed() {
@@ -361,11 +385,21 @@ function reset() {
 	table.html("");
 }
 
+function buttonLabel(arr) {
+	var spanSelect = d3.select("#selectorSpan");
+	if (arr.objects.length === 0) {
+		spanSelect.text("Select all");		
+	}else{
+		spanSelect.text("Clear current selection");
+	}
+}
+
 var pcodeList = {};
 pcodeList.objects = [];
-
 function clicked(d) {
+	
 	if (this.className.baseVal === "syr_admin3 active"){
+		console.log
 		var selection = d3.select("#" + d.properties.PCODE)
 		.attr("class","selected");
 		pcodeList.objects.push(
@@ -383,6 +417,39 @@ function clicked(d) {
 		d3.select("#" + d.properties.PCODE)
 		  .attr("class","syr_admin3 ");
 	}
+	buttonLabel(pcodeList);
+	var csv = Papa.unparse(pcodeList.objects),
+		BOM = "\uFEFF",
+		csvBom = BOM + csv,
+		date = new Date(),
+		time = '_' +('0' +date.getHours()).slice(-2) + ('0' +date.getMinutes()).slice(-2);
+		fileName = "pcodelist" + time + ".csv";
+	d3.select("#download")
+	  .attr("download",fileName)
+	  .attr("href",'data:text/csv;charset=utf-8,'+encodeURIComponent(csvBom));	  
+};
+
+function selectDeselect(d) {
+	if (pcodeList.objects.length > 0) {
+		pcodeList.objects = [];
+		d3.selectAll(".selected")
+		.attr("class", "syr_admin3 ");
+	}else{	
+		var selectThings = d3.selectAll(".syr_admin3 ")
+		.attr("class","selected");
+		selectThings.each(function(d,i) {	pcodeList.objects.push(
+		{"pcode": d.properties.PCODE, 
+		"name_en": d.properties.NAME_EN,
+		"name_ar": d.properties.NAME_ARA,
+		"dist_en":d.properties.ADMIN2_EN,
+		"dist_ar":d.properties.ADMIN2_ARA,
+		"gov_en":d.properties.ADMIN1_EN,
+		"gov_ar":d.properties.ADMIN1_ARA}
+		);});
+
+		};
+		
+	//this needs to be incorporated into a function since it is used twice
 	var csv = Papa.unparse(pcodeList.objects),
 		BOM = "\uFEFF",
 		csvBom = BOM + csv,
@@ -392,7 +459,11 @@ function clicked(d) {
 	d3.select("#download")
 	  .attr("download",fileName)
 	  .attr("href",'data:text/csv;charset=utf-8,'+encodeURIComponent(csvBom));
-};
+		
+	buttonLabel(pcodeList);
+}
+
+
 </script>
 
 </body>
