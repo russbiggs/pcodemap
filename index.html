@@ -6,6 +6,7 @@
 	
 	body {
 		background-color:#EFEFEF;
+		
 	
 	}
 
@@ -55,7 +56,7 @@
 
 	html {
 	  font-family: "Helvetica Neue", Helvetica, sans-serif;
-	  font-size: 10px;	  
+	  min-font-size:8px;
 	}
 		
 	text {
@@ -63,35 +64,124 @@
 	}
 	
 	#container {
+		min-width:1000px;
+		min-height:350px;
 		background-color:white;
-		width:1251px;
-		height:502px;
+		margin: 0 auto;	
+		border-width:1px;
+		border-color:#888888;
+		border-style:solid;
+		overflow-x:none;
+		white-space:nowrap;
+	}
+	
+	
+	@media screen 
+	and (min-width:1200px)
+	and (max-width:1600px){
+	#container {
+		width:1200px;
+		margin: 0 auto;	
+	}	
+	#header {
+		width:1200px;
+	}
+	}
+	
+	@media screen and 
+	and (min-width:1000px)
+	and (max-width:1200px){
+	#container {
+		width:1000px;
 		margin: 0 auto;	
 	}
+	#header {
+		width:1000px;
+	}
+	}
+	
+	@media screen 
+	and (min-height:800px)
+	and (max-height:1200px){
+	html{
+		font-size:16px;
+	}
+	#container {
+		height:800px;	
+	}
+	#header {
+		height:75px;
+	}
+	}
+	
+	@media screen
+	and (min-height:643px)
+	and (max-height:700px){
+	html{
+		font-size:10px;
+	}
+	
+	#container {
+		height:500px;	
+	}
+	#header {
+		height:75px;
+	}
+	}
+	
+	@media screen
+	and (min-height:524px)
+	and (max-height:642px){
+	html{
+		font-size:8px;
+	}
+	#container {
+		height:400px;	
+	}
+	#header {
+		height:60px;
+	}
+	}
+	
+	@media screen
+	and (max-height:523px){
+		html {
+			font-size:8px;
+		}
+	}
+	#frame {
+		width:calc(50% - 1px);
+		height:100%;
+		display:inline-block;
+		margin-left:0;
+		margin-right:0;
+		border-left-width:1px;
+		border-left-color:#888888;
+		border-left-style:solid;
+		white-space:nowrap;
+		overflow-x:none;
+	}
+	
 
 	#header {
+		white-space:nowrap;
+		overflow-x:none;
 		margin-top:20px;
-		width:1250px;
-		height:75px;
 		margin: 0 auto;
 	}
 
 	#area1 {
-		<!--background-color:red;-->
-		width:49%;
-		height: 99%;
+
+		width:50%;
+		height: 100%;
 		float:left;
 		margin-left:0;
 		margin-right:0;
-		border-width:0.5%;
-		border-color:#888888;
-		border-style:solid;
-		border-right-style:none;
 		
 	}
 
 	#area2 {
-		<!--background-color:blue;-->
+
 		width:100%;
 		height: 60%;
 		margin-left:0;
@@ -99,7 +189,7 @@
 	}
 
 	#area3 {
-		<!--background-color:green;-->
+
 		width:100%;
 		height: 30%;
 		margin-left:0;
@@ -115,7 +205,7 @@
 	}
 
 	#footer {
-		width:100%;
+		width:950px;
 		height: 30px;
 		clear:both;
 		float:bottom;
@@ -155,16 +245,7 @@
 		transition-delay:0.2s;
 	}
 	
-	#frame {
-		width:49%;
-		height:99%;
-		float:left;
-		margin-left:0;
-		margin-right:0;
-		border-width:0.5%;
-		border-color:#888888;
-		border-style:solid;
-	}
+
 	
 	#downloadButton {
 	}
@@ -218,7 +299,7 @@
 	#download, #selector, #instruction{
 		padding-top:2%;
 		display: inline-block;
-		width:33%;
+		width:32%;
 	}
 	#instructions {
 		z-index:3;
@@ -305,16 +386,36 @@
 	</div>
 
 </div>
-<div id="footer"><p>Data: Modified from <a href="http://www.humanitarianresponse.info/en/applications/data/datasets/locations/syrian-arab-republic">Common Operational Dataset(COD)<a> </p></div>
 </div>
+<div id="footer"><p>Data: Modified from <a href="http://www.humanitarianresponse.info/en/applications/data/datasets/locations/syrian-arab-republic">Common Operational Dataset(COD)<a> </p></div>
+
 
 <script>
 
+var screenHeight = window.innerHeight;
+var screenWidth = window.innerWidth;
+console.log(screenHeight);
+console.log(screenWidth);
+if (screenWidth < 1600 && screenWidth > 1200) { 
+var width = 600;
+}else if (screenWidth <= 1200){
+var width = 500;
+}
 
-var width = 625;
-    height = 500,
-	height2 = 300,
-	active = d3.select(null);
+if (screenHeight < 700 && screenHeight >= 643) { 
+    var height = 500,
+		height2 = 300;
+}else if (screenHeight < 643 && screenHeight >= 524) { 
+    var height = 400,
+		height2 = 240;
+}else if (screenHeight < 524){
+    var height = 350,
+		height2 = 210;
+}
+
+console.log(height);
+console.log(width);
+var	active = d3.select(null);
 
 var projection = d3.geo.mercator()
     .center([39,35])
@@ -378,7 +479,7 @@ d3.json("syria_adm.json", function(error, Syria) {
 
 var map2 = d3.select("#area2").append("svg")
 			 .attr("width", width)
-			 .attr("height",height)
+			 .attr("height",height2)
 			 .append("g");
 	
 
@@ -437,6 +538,9 @@ var table = d3.select("#area3")
 
 map2.attr("height",0);
 		
+
+var areawidth = d3.select("#area1").style('width');
+console.log(areawidth);
 			
 function zoomed() {
 	map1.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
