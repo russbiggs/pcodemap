@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head>
+	<style>
+	
+	body {
+		background-color:#EFEFEF;
+	}
+
+	h1 {
+		display:inline-block;
+		font-weight:normal;
+		font-size:3em;
+		margin:0;
+		margin-top:1%;
+	}
+
+	h2 {	
+		font-weight:normal;
+		font-size:2em;
+		margin:0;
+	}
+	
+	.syr_admin3-boundary {
+	  fill: none;
+	  stroke: #FFF;
+	  stroke-linejoin: round;
+	}
+	  
+	.syr_admin3 { 
+	  fill: #CDCDCD; 
+	}
+
+	.syr_admin3:hover { 
+	  fill: #54B6FD;
+	  <!--fill: #CD435B;--> 
+	}
+
+	.gov-label {
+	  pointer-events: none;
+	  fill: #383838;
+	  font-size: 1.2em;
+	  text-anchor: middle;
+	  text-shadow: 0.1em 0.1em #fff;
+	}
+
+	.gov_bounds {
+		fill:none;
+		stroke:#383838; 
+		stroke-width:0.125em;
+	}
+
+	html {
+	  font-family: "Helvetica Neue", Helvetica, sans-serif;
+	  min-font-size:8px;
+	}
+		
+	text {
+		pointer-events: none;	
+	}
+	
+	#container {
+		min-width:1000px;
+		min-height:350px;
+		background-color:white;
+		margin: 0 auto;	
+		border-width:1px;
+		border-color:#888888;
+		border-style:solid;
+		overflow-x:none;
+		white-space:nowrap;
+	}
+	
+	
+	
+	@media screen 
+	and (min-device-width: 1200px) 
+	and (max-device-width: 1600px) 
+	and (-webkit-min-device-pixel-ratio: 2)
+	and (min-resolution: 192dpi) { 
+	}
+	
+	
+	@media screen 
+	and (min-width:1200px)
+	and (max-width:1600px){
+	#container {
+		width:1200px;
+		margin: 0 auto;	
+	}	
+	#header {
+		width:1200px;
+	}
+	
+		#footer {
+		width:1200px;
+	}
+	}
+	
+	@media screen and 
+	and (min-width:1000px)
+	and (max-width:1200px){
+	#container {
+		width:1000px;
+		margin: 0 auto;	
+	}
+	#header {
+		width:1000px;
+	}
+	
+	#footer {
+		width:1000px;
+	}
+	}
+	
+	@media screen 
+	and (min-height:800px)
+	and (max-height:1200px){
+	html{
+		font-size:16px;
+	}
+	#container {
+		height:800px;	
+	}
+	#header {
+		height:75px;
+	}
+	}
+	
+	@media screen
+	and (min-height:643px)
+	and (max-height:700px){
+	html{
+		font-size:10px;
+	}
+	
+	#container {
+		height:500px;	
+	}
+	#header {
+		height:75px;
+	}
+	}
+	
+	@media screen
+	and (min-height:524px)
+	and (max-height:642px){
+	html{
+		font-size:8px;
+	}
+	#container {
+		height:400px;	
+	}
+	#header {
+		height:60px;
+	}
+	}
+	
+	@media screen
+	and (max-height:523px){
+		html {
+			font-size:8px;
+		}
+	}
+	#frame {
+		width:calc(50% - 1px);
+		height:100%;
+		display:inline-block;
+		margin-left:0;
+		margin-right:0;
+		border-left-width:1px;
+		border-left-color:#888888;
+		border-left-style:solid;
+		white-space:nowrap;
+		overflow-x:none;
+	}
+	
+
+	#header {
+		white-space:nowrap;
+		overflow-x:none;
+		margin-top:20px;
+		margin: 0 auto;
+	}
+
+	#area1 {
+		width:50%;
+		height: 100%;
+		float:left;
+		margin-left:0;
+		margin-right:0;		
+	}
+
+	#area2 {
+		width:100%;
+		height: 60%;
+		margin-left:0;
+		margin-right:0;
+	}
+
+	#area3 {
+		width:100%;
+		height: 30%;
+		min-height:105px;
+		margin-left:0;
+		margin-right:0;
+		clear:both;
+	}
+	
+	#buttonArea {
+		width:100%;
+		height:10%;
+		clear:both;	
+	}
+
+	#footer {
+		height: 30px;
+		clear:both;
+		float:bottom;
+		margin:0 auto;
+	}
+
+	table {
+		width:75%;
+		height:100%;
+		min-height:90px;
+		font-size:2em;
+		border-top-style:double;
+		border-top-color:black;
+		margin: 0 auto;
+	}
+	
+	td:first-child{
+		font-weight:bold;
+		width:30%;
+	}
+	
+	td:first-child + td {
+		text-align:left;
+		width:35%;
+	}
+
+	td:first-child + td + td {
+		text-align:right;
+		width:35%;
+	}
+	
+	.selected {
+		fill:#0279D0;
+		transition:0.5s;
+	}
+
+	.selected:hover {
+		fill:#BE4545;
+	}
+	
+
+	.buttonActive {
+		margin-left:15%;
+		background-color:#54B6FD;
+		text-align:center;
+		height:50%;
+		width:70%;
+		display:inline-block;
+		line-height:28px;
+		border-radius:5px;
+	}
+	
+	.buttonInactive {
+		margin-left:15%;
+		background-color:#54B6FD;
+		text-align:center;
+		height:50%;
+		width:70%;
+		display:inline-block;
+		line-height:28px;
+		border-radius:5px;
+	}
+	
+	.buttonActive:hover {
+		background-color:#0279D0;
+	}
+	
+	#selectButton {
+	}
+	
+	#selectorSpan {
+		color:white;
+	}
+	#downloadSpan {
+		color:grey;
+	}
+
+	#instructSpan {
+		color:grey;
+	}
+
+	span {
+		vertical-align: middle;
+		font-size:1.2em;
+		pointer-events:none;
+	}
+	
+	#download, #selector, #instruction{
+		padding-top:2%;
+		display: inline-block;
+		width:32%;
+	}
+	#instructions {
+		z-index:3;
+		position:absolute;
+		top:90px;
+	}
+	
+	.lang {
+		display:inline-block;
+		background-color:white;
+		width:50%;
+		height:100%;
+		text-align:center;
+		line-height:400%;
+		font-size:1em;
+	}
+	
+	#langSelect {
+		float:right;
+		width:10%;
+		height:50%;
+	}
+	
+	#title {
+		width:50%;
+		display:inline-block;	
+	}
+	
+	#instructionList {
+		font-size:1.5em;
+	
+	}
+	
+	#instructions > h2 {
+		text-align:center;
+	}
+	
+	
+	
+	</style>
+</head>
+<body>
+<script src="js/d3.min.js"></script>
+<script src="js/topojson.min.js"></script>
+<script src="PapaParse-4.1.0/papaparse.min.js" type="text/javascript"></script>
+
+<div id="header">
+	<div id="title">
+	<h1>Syrian Arab Republic Reference Map</h1>
+	<h2>Sub-district Identifier </h2>
+	</div>
+	
+	<!---
+	<div id="langSelect">
+	<div class="lang" id="en">EN</div><div class="lang" id="ar">AR</div>
+	</div>
+	--->
+</div>
+<div id="container">
+
+
+<div id="area1"></div>
+<div id="frame">
+	<div id="area2">
+
+	</div>
+	<div id="area3"></div>
+	<div id="buttonArea">
+	<a id="download">
+		<div class="buttonInactive" id="downloadButton">
+			<span id= "downloadSpan">Download .csv</span>
+		</div>
+	</a>
+	<a id="selector">
+		<div class="buttonActive" id="selectButton">
+			<span id="selectorSpan">Select all</span>
+		</div>
+	</a>
+	<a id="instruction">
+		<div class="buttonInactive" id="instructButton">
+			<span id="instructSpan">Instructions</span>
+		</div>
+	</a>
+	</div>
+
+</div>
+</div>
+<div id="footer"><p>Data: Modified from <a href="http://www.humanitarianresponse.info/en/applications/data/datasets/locations/syrian-arab-republic">Common Operational Dataset(COD)<a> </p></div>
+
+
+<script>
+
+var screenHeight = window.innerHeight;
+var screenWidth = window.innerWidth;
+
+if (screenWidth < 1600 && screenWidth > 1200) { 
+var width = 600;
+}else if (screenWidth <= 1200){
+var width = 500;
+}
+
+if (screenHeight < 700 && screenHeight >= 643) { 
+    var height = 500,
+		height2 = 300;
+}else if (screenHeight < 643 && screenHeight >= 524) { 
+    var height = 400,
+		height2 = 240;
+}else if (screenHeight < 524){
+    var height = 350,
+		height2 = 210;
+}
+
+var	active = d3.select(null);
+
+var projection = d3.geo.mercator()
+    .center([39,35])
+    .scale(4400)
+    .translate([width / 2, height / 2.1]);
+
+var path = d3.geo.path()
+    .projection(projection);
+
+var zoom = d3.behavior.zoom()
+	.scaleExtent([1,3])
+	.on("zoom", zoomed);
+
+var map1 = d3.select("#area1").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+	.attr("id","map1")
+	.call(zoom)
+	.on("dblclick.zoom", null)
+	.append("g");
+	
+
+var map2 = d3.select("#area2").append("svg")
+	 .attr("width", width)
+	 .attr("height",height2)
+	 .attr("id","map2")
+	 .append("g");
+	 
+
+	
+d3.select("#selectButton")
+	.on('click',selectDeselect);
+	
+	
+d3.json("syria_adm.json", function(error, Syria) {
+	var subdists = topojson.feature(Syria, Syria.objects.syr_admin3),
+		govs = topojson.feature(Syria, Syria.objects.syr_admin1_gov),
+		comms = topojson.feature(Syria, Syria.objects.syr_admin4_cap);
+		
+	country = topojson.merge(Syria, Syria.objects.syr_admin1_gov.geometries);
+	projection
+      .scale(1)
+      .translate([0, 0]);
+	  
+	bounds = path.bounds(country);
+	var dx = bounds[1][0] - bounds[0][0],
+		dy = bounds[1][1] - bounds[0][1],
+		x = (bounds[0][0] + bounds[1][0]) / 2,
+		y = (bounds[0][1] + bounds[1][1]) / 2;
+	s = .9 / Math.max(dx / width, dy / height);
+	t = [width / 2 - s* x, height / 2 - s * y];	
+		
+	projection
+		.scale(s)
+		.translate(t);
+
+	
+	map1.selectAll(".syr_admin3")
+      .data(subdists.features)
+    .enter().append("path")
+      .attr("class", function(d) { return ( "syr_admin3 "); })
+	  .attr("id", function(d) { return (d.properties.PCODE);})
+      .attr("d", path)
+	  .on("mouseover",hover)
+	  .on("mouseout", reset)
+	  .on("click",clicked);
+	  
+	map1.append("path")
+	  .datum(topojson.mesh(Syria, Syria.objects.syr_admin3, function(a, b) { return a !== b  ; }))
+	  .attr("d", path)
+	  .attr("class", "syr_admin3-boundary");
+	  
+	map1.append("path")
+	  .datum(topojson.mesh(Syria, Syria.objects.syr_admin1_gov, function(a, b) { return a !== b  ; }))
+	  .attr("d", path)
+	  .attr("class", "gov_bounds");
+	  
+	map1.selectAll("text")
+	  .data((topojson.feature(Syria, Syria.objects.syr_admin1_gov).features))
+	  .enter()
+	  .append("text")
+	  .text(function(d) {return d.properties.ADMIN1_EN})
+	  .attr("x", function(d){
+	    	return path.centroid(d)[0];
+	  })
+	  .attr("y", function(d){
+	    	return  path.centroid(d)[1];
+	  })
+	 .attr("class","gov-label");	  
+
+	map2.selectAll(".syr_admin3_2")
+      .data(subdists.features)
+    .enter().append("path")
+      .attr("class", function(d) { return ( "syr_admin3_2 "); })
+	  .attr("id", function(d) { return (d.properties.PCODE + "_2");})
+	  .style("opacity",0)
+      .attr("d", path);	
+	  	  
+	map2.selectAll("comms")
+      .data(comms.features)
+	  .enter().append("path")
+      .attr("class", "comms")
+	  .attr("id", function(d) {return (d.properties.ADMIN3_COD + "_comm");})
+	  .style("opacity",0);
+	  
+	map2.selectAll("comm-labels")
+      .data(comms.features)
+	  .enter().append("text")
+      .attr("class", "comm-labels")
+	  .attr("id", function(d) {return (d.properties.ADMIN3_COD + "_comm");})
+	  .text(function (d) {return (d.properties.NAME_EN);})
+	  .style("opacity",0)
+      .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; });
+});
+
+
+d3.select(window).on("resize",resize);
+
+function resize() {
+
+	var screenHeight = window.innerHeight;
+	var screenWidth = window.innerWidth;
+	if (screenWidth < 1600 && screenWidth > 1200) { 
+	   width = 600;
+	}else if (screenWidth <= 1200){
+	   width = 500;
+	}
+
+	if (screenHeight < 700 && screenHeight >= 643) { 
+		height = 500;
+		height2 = 300;
+	}else if (screenHeight < 643 && screenHeight >= 524) { 
+		height = 400;
+		height2 = 240;
+	}else if (screenHeight < 524){
+		height = 350;
+		height2 = 210;
+	}
+
+	var	dx = bounds[1][0] - bounds[0][0],
+		dy = bounds[1][1] - bounds[0][1],
+		x = (bounds[0][0] + bounds[1][0]) / 2,
+		y = (bounds[0][1] + bounds[1][1]) / 2,
+		s = .9 / Math.max(dx / width, dy / height),
+		t = [width / 2 - s* x, height / 2 - s * y];
+	console.log(t);
+	
+	projection.scale(s)
+	.translate(t);
+		
+	map1.selectAll(".syr_admin3").attr('d', path);
+	map1.selectAll(".selected").attr('d', path);
+    map1.selectAll( ".gov_bounds").attr('d', path);
+	map1.selectAll( ".syr_admin3-boundary").attr('d', path);
+	map1.selectAll( ".gov-label").attr('d', path)
+    .attr("x", function(d){
+	    	return path.centroid(d)[0];
+	  })
+	.attr("y", function(d){
+	    	return  path.centroid(d)[1];
+	  });
+	  
+	d3.select("#map1").attr("height",height)
+					  .attr("width",width);
+	d3.select("#map2").attr("height",height2)
+				      .attr("width",width);
+} 
+
+function showInstruct() {
+
+var instructText = "<h2>How to use this map</h2><ul id='instructionList'><li>To view pcode and administrative info <i>hover</i> mouse over sub-district</li><li>To zoom in/out of reference map <i>scroll</i> mouse or touchpad</li><li>To add sub-district to selection <i>click</i> on sub-district</li><li>To download selection <i>click</i> the download button below</li></ul>"
+var instruct = d3.select("#area2")
+				.append("div")
+				.attr("id","instructions")
+				.attr("width",width)
+				.attr("height",height)
+				.html(instructText);
+			
+d3.select("#instructButton")
+.attr("class","buttonInactive")
+.on("click",null);
+
+d3.select("#instructSpan")
+  .style("color","grey");	
+}
+
+showInstruct();
+
+var table = d3.select("#area3")
+			.append("table");
+
+map2.attr("height",0);
+		
+var areawidth = d3.select("#area1").style('width');
+
+
+			
+function zoomed() {
+	map1.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+	map1.select(".syr_admin3-boundary").style("stroke-width",1 /d3.event.scale + "px");
+}
+var n = 1;
+
+function hover(d) {
+
+	console.log(t);
+	console.log(s);
+	projection
+	.scale(s)
+	.translate(t);
+	
+	var path = d3.geo.path()
+    .projection(projection);
+	
+	d3.select("#instructions")
+	.remove();
+	
+	d3.select("#instructButton")
+	.attr("class","buttonActive")
+	.on("click",showInstruct);
+
+	d3.select("#instructSpan")
+	.style("color","white");	
+	
+	if (n === 1) {
+		map2.attr("height",height2);
+		n++;
+	}
+		
+	//var bounds = [[512.6563073642501,25],[549.2498437856216,62.32394021144955]],
+	var bounds = path.bounds(d),
+		dx = bounds[1][0] - bounds[0][0],
+		dy = bounds[1][1] - bounds[0][1],
+		x = (bounds[0][0] + bounds[1][0]) / 2,
+		y = (bounds[0][1] + bounds[1][1]) / 2;
+		scale = .9 / Math.max(dx / width, dy / height2),
+		translate = [width / 2 - scale * x, height2 / 2 - scale * y];
+
+	d3.select("#" + this.id + "_2") 
+		.style("fill","#CDCDCD")	
+		.style("opacity",1);
+		
+	d3.selectAll("#" + this.id + "_comm")
+		.style("opacity",1)
+		.attr("d", path.pointRadius(2/scale));
+		
+	d3.selectAll("text#" + this.id + "_comm")
+	  .style("opacity",1)
+	  .style("font-size", 12/scale + "px")
+	  .attr("dx", 2/scale + "em")
+	  .attr("dy", 2/scale + "em");
+		
+	if (active.node() === this) return reset();
+	active.classed("active", false);
+	active = d3.select(this).classed("active", true);
+	
+	map2.transition()
+      .duration(0)
+      .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
+	  
+	table.html("<th colspan='3'>" + d.properties.PCODE + "</th><tr><td>Sub-district</td><td>" + d.properties.NAME_EN + "</td><td>" + d.properties.NAME_ARA + "</td></tr><tr><td>District</td><td>" +  d.properties.ADMIN2_EN + "</td><td>" + d.properties.ADMIN2_ARA + "</td></tr><tr><td>Governorate</td><td>" + d.properties.ADMIN1_EN  + "</td><td>" +  d.properties.ADMIN1_ARA + "</td></tr>");
+}
+
+function reset() {
+	d3.select("#" + this.id + "_2") 
+	  .style("opacity",0);
+	
+	d3.selectAll("#" + this.id + "_comm")
+	  .style("opacity",0)
+	  .attr("d",path.pointRadius(0));
+	  
+	d3.selectAll("text#" + this.id + "_comm")
+	  .style("opacity",0)
+	
+	active.classed("active", false);
+	active = d3.select(null);
+
+	map2.transition()
+      .duration(0)
+      .attr("transform", "");
+	  
+	table.html("");
+}
+
+function buttonLabel(arr) {
+	var spanSelect = d3.select("#selectorSpan");
+	if (arr.objects.length === 0) {
+		spanSelect.text("Select all");		
+	}else{
+		spanSelect.text("Clear current selection");
+	}
+}
+
+var pcodeList = {};
+pcodeList.objects = [];
+function clicked(d) {
+	
+	if (this.className.baseVal === "syr_admin3 active"){
+		var selection = d3.select("#" + d.properties.PCODE)
+		.attr("class","selected");
+		pcodeList.objects.push(
+			{"pcode": d.properties.PCODE, 
+			 "name_en": d.properties.NAME_EN,
+			 "name_ar": d.properties.NAME_ARA,
+			 "dist_en":d.properties.ADMIN2_EN,
+			 "dist_ar":d.properties.ADMIN2_ARA,
+			 "gov_en":d.properties.ADMIN1_EN,
+			 "gov_ar":d.properties.ADMIN1_ARA}
+			);
+	}else {	
+		var index = pcodeList.objects.map(function(e) { return e.pcode; }).indexOf(d.properties.PCODE);
+		pcodeList.objects.splice( index, 1 );				
+		d3.select("#" + d.properties.PCODE)
+		  .attr("class","syr_admin3 ");
+	}
+	buttonLabel(pcodeList);
+	csvCreate();  
+};
+
+function selectDeselect(d) {
+	if (pcodeList.objects.length > 0) {
+		pcodeList.objects = [];
+		d3.selectAll(".selected")
+		.attr("class", "syr_admin3 ");
+	}else{	
+		var selectThings = d3.selectAll(".syr_admin3 ")
+		.attr("class","selected");
+		selectThings.each(function(d,i) {	pcodeList.objects.push(
+		{"pcode": d.properties.PCODE, 
+		"name_en": d.properties.NAME_EN,
+		"name_ar": d.properties.NAME_ARA,
+		"dist_en":d.properties.ADMIN2_EN,
+		"dist_ar":d.properties.ADMIN2_ARA,
+		"gov_en":d.properties.ADMIN1_EN,
+		"gov_ar":d.properties.ADMIN1_ARA}
+		);});
+
+		};
+	
+	csvCreate();
+	buttonLabel(pcodeList);
+}
+
+function csvCreate () {
+	if (pcodeList.objects.length > 0) {
+		d3.select("#downloadSpan")
+		  .style("color","white");
+		  
+		d3.select("#downloadButton")
+		.attr("class", "buttonActive")
+		
+		var csv = Papa.unparse(pcodeList.objects),
+			BOM = "\uFEFF",
+			csvBom = BOM + csv,
+			date = new Date(),
+			time = '_' +('0' +date.getHours()).slice(-2) + ('0' +date.getMinutes()).slice(-2);
+			fileName = "pcodelist" + time + ".csv";
+		d3.select("#download")
+		  .attr("download",fileName)
+		  .attr("href",'data:text/csv;charset=utf-8,'+encodeURIComponent(csvBom));
+	}else{
+		d3.select("#downloadSpan")
+		  .style("color","grey");
+		d3.select("#downloadButton")
+		  .attr("class", "buttonInactive");
+		d3.select("#download")
+		  .attr("download",null)
+		  .attr("href",null);
+	}
+}
+
+</script>
+
+</body>
+</html>
