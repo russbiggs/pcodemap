@@ -397,7 +397,6 @@
 
 
 <script>
-
 var screenHeight = window.innerHeight;
 var screenWidth = window.innerWidth;
 
@@ -468,7 +467,7 @@ d3.json("syria_adm.json", function(error, Syria) {
 		dy = bounds[1][1] - bounds[0][1],
 		x = (bounds[0][0] + bounds[1][0]) / 2,
 		y = (bounds[0][1] + bounds[1][1]) / 2;
-	s = .9 / Math.max(dx / width, dy / height);
+	s = 0.9 / Math.max(dx / width, dy / height);
 	t = [width / 2 - s* x, height / 2 - s * y];	
 		
 	projection
@@ -500,7 +499,7 @@ d3.json("syria_adm.json", function(error, Syria) {
 	  .data((topojson.feature(Syria, Syria.objects.syr_admin1_gov).features))
 	  .enter()
 	  .append("text")
-	  .text(function(d) {return d.properties.ADMIN1_EN})
+	  .text(function(d) {return d.properties.ADMIN1_EN;})
 	  .attr("x", function(d){
 	    	return path.centroid(d)[0];
 	  })
@@ -562,7 +561,7 @@ function resize() {
 		dy = bounds[1][1] - bounds[0][1],
 		x = (bounds[0][0] + bounds[1][0]) / 2,
 		y = (bounds[0][1] + bounds[1][1]) / 2,
-		s = .9 / Math.max(dx / width, dy / height),
+		s = 0.9 / Math.max(dx / width, dy / height),
 		t = [width / 2 - s* x, height / 2 - s * y];
 	console.log(t);
 	
@@ -589,7 +588,7 @@ function resize() {
 
 function showInstruct() {
 
-var instructText = "<h2>How to use this map</h2><ul id='instructionList'><li>To view pcode and administrative info <i>hover</i> mouse over sub-district</li><li>To zoom in/out of reference map <i>scroll</i> mouse or touchpad</li><li>To add sub-district to selection <i>click</i> on sub-district</li><li>To download selection <i>click</i> the download button below</li></ul>"
+var instructText = "<h2>How to use this map</h2><ul id='instructionList'><li>To view pcode and administrative info <i>hover</i> mouse over sub-district</li><li>To zoom in/out of reference map <i>scroll</i> mouse or touchpad</li><li>To add sub-district to selection <i>click</i> on sub-district</li><li>To download selection <i>click</i> the download button below</li></ul>";
 var instruct = d3.select("#area2")
 				.append("div")
 				.attr("id","instructions")
@@ -654,7 +653,7 @@ function hover(d) {
 		dy = bounds[1][1] - bounds[0][1],
 		x = (bounds[0][0] + bounds[1][0]) / 2,
 		y = (bounds[0][1] + bounds[1][1]) / 2;
-		scale = .9 / Math.max(dx / width, dy / height2),
+		scale = 0.9 / Math.max(dx / width, dy / height2),
 		translate = [width / 2 - scale * x, height2 / 2 - scale * y];
 
 	d3.select("#" + this.id + "_2") 
@@ -691,7 +690,7 @@ function reset() {
 	  .attr("d",path.pointRadius(0));
 	  
 	d3.selectAll("text#" + this.id + "_comm")
-	  .style("opacity",0)
+	  .style("opacity",0);
 	
 	active.classed("active", false);
 	active = d3.select(null);
@@ -736,7 +735,7 @@ function clicked(d) {
 	}
 	buttonLabel(pcodeList);
 	csvCreate();  
-};
+}
 
 function selectDeselect(d) {
 	if (pcodeList.objects.length > 0) {
@@ -756,7 +755,7 @@ function selectDeselect(d) {
 		"gov_ar":d.properties.ADMIN1_ARA}
 		);});
 
-		};
+		}
 	
 	csvCreate();
 	buttonLabel(pcodeList);
@@ -768,7 +767,7 @@ function csvCreate () {
 		  .style("color","white");
 		  
 		d3.select("#downloadButton")
-		.attr("class", "buttonActive")
+		.attr("class", "buttonActive");
 		
 		var csv = Papa.unparse(pcodeList.objects),
 			BOM = "\uFEFF",
